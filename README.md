@@ -13,7 +13,7 @@
 
 ```
 $ git@github.com:marquin223/OPTI.git
-$ cd problem-track
+$ cd OPTI
 ```
 
 #### Define the env variables
