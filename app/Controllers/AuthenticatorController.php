@@ -37,8 +37,6 @@ class AuthenticatorController extends Controller
           FlashMessage::success('Login bem sucedido');
           $this->redirectTo('admin');
       }
-
-
       if ($login->user_id) {
         FlashMessage::success('Login bem sucedido');
           $_SESSION['user_id'] = $login->id;
