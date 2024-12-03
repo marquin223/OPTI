@@ -85,9 +85,3 @@ $ ./run phpstan
 ```
 
 Access [localhost](http://localhost)
-
-### Teste de API
-
-```shell
-curl -H "Accept: application/json" localhost/problems
-```

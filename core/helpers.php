@@ -22,20 +22,22 @@ if (!function_exists('route')) {
     }
 
     if (!function_exists('view')) {
-      function view(string $view, array $data = [])
-      {
-          extract($data); // Extrai as variáveis do array $data para o escopo da view
+      /**
+     * @param array<string, mixed> $data
+     * @return void
+     */
+        function view(string $view, array $data = []): void
+        {
+            extract($data); // Extrai as variáveis do array $data para o escopo da view
 
-          // Adicionando o subdiretório 'home' na construção do caminho
-          $viewPath = __DIR__ . '/../app/views/home/' . $view . '.phtml';
+            // Adicionando o subdiretório 'home' na construção do caminho
+            $viewPath = __DIR__ . '/../app/views/home/' . $view . '.phtml';
 
-          if (file_exists($viewPath)) {
-              require_once $viewPath;
-          } else {
-              throw new Exception("View {$view} not found in /home.");
-          }
-      }
-  }
-
-
+            if (file_exists($viewPath)) {
+                require_once $viewPath;
+            } else {
+                throw new Exception("View {$view} not found in /home.");
+            }
+        }
+    }
 }

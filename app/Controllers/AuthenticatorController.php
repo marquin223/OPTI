@@ -11,60 +11,63 @@ use Lib\FlashMessage;
 
 class AuthenticatorController extends Controller
 {
-
-  public function showLogin()
-  {
-    if (session_status() === PHP_SESSION_NONE) {
-      session_start();
+    public function showLogin(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        include '../app/views/home/index.phtml';
     }
-      include '../app/views/home/index.phtml';
-  }
-  public function authenticate(Request $request): void
-  {
-    $email = $request->input('email');
-    $password = $request->input('password');
 
-      $login = Login::first(['email' => $email]);
+    public function authenticate(Request $request): void
+    {
+        $email = $request->input('email');
+        $password = $request->input('password');
 
-      if (!$login || $password !== $login->password) {
-          FlashMessage::danger('Credenciais inválidas');
-          $this->redirectTo('/');
-          return;
-      }
+        $login = Login::first(['email' => $email]);
 
-      if ($login->admin_id) {
-          $_SESSION['user_id'] = $login->id;
-          FlashMessage::success('Login bem sucedido');
-          $this->redirectTo('admin');
-      }
+        if (!$login || $password !== $login->password) {
+            FlashMessage::danger('Credenciais inválidas');
+            $this->redirectTo('/');
+            return;
+        }
 
+        if ($login->admin_id) {
+            $_SESSION['user_id'] = $login->id;
+            FlashMessage::success('Login bem sucedido');
+            $this->redirectTo('admin');
+        }
 
-      if ($login->user_id) {
-        FlashMessage::success('Login bem sucedido');
-          $_SESSION['user_id'] = $login->id;
-          $this->redirectTo('user');
-      }
+        if ($login->user_id) {
+            FlashMessage::success('Login bem sucedido');
+            $_SESSION['user_id'] = $login->id;
+            $this->redirectTo('user');
+        }
 
 
-      FlashMessage::danger('Erro inesperado. Entre em contato com o suporte.');
-      $this->redirectTo('/');
-  }
+        FlashMessage::danger('Erro inesperado. Entre em contato com o suporte.');
+
+        $this->redirectTo('/');
+    }
 
     public function logout(): void
     {
         Auth::logout();
+
         FlashMessage::success('Você foi desconectado!');
+
         $this->redirectTo('/');
     }
-    public function admin()
+
+    public function admin(): void
     {
 
-        return view('admin');
-
+        view('admin');
     }
-    public function user()
+
+    public function user(): void
     {
 
-        return view('user');
+        view('user');
     }
 }

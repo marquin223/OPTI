@@ -52,6 +52,11 @@ class Router
         return $this->routes[$index];
     }
 
+    /**
+   * @param array<string, mixed> $params
+   * @return string
+   */
+
     public function getRoutePathByName(string $name, array $params = []): string
     {
         foreach ($this->routes as $route) {
@@ -67,6 +72,10 @@ class Router
         throw new Exception("Route with name $name not found", 500);
     }
 
+    /**
+   * @param array<string, mixed> $params
+   * @return string
+   */
 
     private function replaceRouteParams(string $routePath, &$params): string
     {

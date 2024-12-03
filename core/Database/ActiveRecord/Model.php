@@ -294,7 +294,7 @@ abstract class Model
 
     /**
      * @param array<string, mixed> $conditions
-     * @return array<static>
+     * @return static[]
      */
     public static function where(array $conditions): array
 {
@@ -332,7 +332,10 @@ abstract class Model
 }
 
 
-
+    /**
+   * @param array<string, mixed> $conditions
+   * @return static|null
+   */
 
     public static function first(array $conditions): ?static
     {
@@ -340,7 +343,10 @@ abstract class Model
 
         return $results[0] ?? null;
     }
-
+    /**
+   * @param array<string, mixed> $conditions
+   * @return static|null
+   */
 
     public static function findBy($conditions): ?static
     {

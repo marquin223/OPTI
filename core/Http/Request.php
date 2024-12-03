@@ -26,6 +26,11 @@ class Request
         return $this->method;
     }
 
+      /**
+   * @param string $key
+   * @return mixed|null
+   */
+
     public function input(string $key)
     {
 
@@ -44,15 +49,29 @@ class Request
     {
         return $this->uri;
     }
+
+    /**
+   * @return array<string, mixed>
+   */
+
     public function getParams(): array
     {
         return $this->params;
     }
 
+    /**
+   * @return array<string, string>
+   */
+
     public function getHeaders(): array
     {
         return $this->headers;
     }
+
+    /**
+   * @param array<string, mixed> $params
+   * @return void
+   */
 
     public function addParams(array $params): void
     {
