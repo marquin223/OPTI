@@ -13,4 +13,3 @@ EnvLoader::init();
 Core\Router\Router::init();
 
 require 'routes.php';
-
