@@ -7,7 +7,7 @@ use Core\Database\ActiveRecord\Model;
 class Login extends Model
 {
     protected static string $table = 'logins';
-    protected static array $columns = ['id', 'email', 'password'];
+    protected static array $columns = ['id',  'user_id',  'email', 'password'];
 
     public ?int $id = null;
     public ?int $user_id = null;
