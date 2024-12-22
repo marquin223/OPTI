@@ -14,14 +14,11 @@ class User extends Model
     public string $phone;
 
     /**
-     * Valida os dados antes de salvar ou atualizar o registro.
-     *
      * @return void
      */
     public function validates(): void
     {
-        // Validações básicas
-        if (empty($this->name)) {  // Acessando usando __get
+        if (empty($this->name)) {
             $this->addError('name', 'O campo nome é obrigatório.');
         }
 

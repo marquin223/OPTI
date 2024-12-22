@@ -7,7 +7,7 @@ use Core\Database\ActiveRecord\Model;
 class Login extends Model
 {
     protected static string $table = 'logins';
-    protected static array $columns = ['id',  'user_id',  'email', 'password'];
+    protected static array $columns = ['id',  'user_id', 'admin_id',  'email', 'password'];
 
     public ?int $id = null;
     public ?int $user_id = null;
@@ -24,5 +24,11 @@ class Login extends Model
         if (empty($this->password)) {
             throw new \InvalidArgumentException("O campo 'password' é obrigatório.");
         }
+    }
+
+
+    public static function findByAdminId(int $adminId): ?self
+    {
+        return self::first(['admin_id' => $adminId]);
     }
 }

@@ -32,7 +32,7 @@ CREATE TABLE admins (
 
 INSERT INTO admins (id, name, date_birth, phone)
 VALUES
-    (1, 'admin', '1980-01-01', '0987654321');
+    (1, 'admin', '1980-01-01', '(42)99999-9999');
 
 CREATE TABLE logins (
     id INT PRIMARY KEY AUTO_INCREMENT,
