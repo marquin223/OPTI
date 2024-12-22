@@ -309,9 +309,6 @@ abstract class Model
 
     $sql .= implode(' AND ', $sqlConditions);
 
-    // Debugging para verificar o SQL gerado
-    var_dump("SQL Gerado: " . $sql);
-
     $pdo = Database::getDatabaseConn();
     $stmt = $pdo->prepare($sql);
 
