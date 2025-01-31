@@ -3,7 +3,19 @@
 use App\Controllers\AuthenticatorController;
 use App\Controllers\RegistrationController;
 use App\Controllers\AdminController;
+use App\Controllers\TicketController;
 use Core\Router\Route;
+
+
+Router::get('/tickets', [TicketController::class, 'index']);
+
+Router::get('/tickets/create', [TicketController::class, 'create']);
+
+Router::post('/tickets/store', [TicketController::class, 'store']);
+
+Router::get('/tickets/{id}', [TicketController::class, 'show']);
+
+Router::post('/tickets/{id}/update-status', [TicketController::class, 'updateStatus']);
 
 Route::get('/', [AuthenticatorController::class, 'showLogin'])->name('login');
 

@@ -1,0 +1,21 @@
+<h2>Detalhes do Ticket</h2>
+<p><strong>ID:</strong> <?= $ticket->id ?></p>
+<p><strong>Título:</strong> <?= $ticket->title ?></p>
+<p><strong>Descrição:</strong> <?= $ticket->description ?></p>
+<p><strong>Status:</strong> <?= $ticket->status()->name ?></p>
+
+<?php if ($ticket->admin_id): ?>
+    <p><strong>Administrador Responsável:</strong> <?= $ticket->admin()->name ?></p>
+<?php endif; ?>
+
+<form method="POST" action="/tickets/<?= $ticket->id ?>/update-status">
+    <label>Alterar Status:</label>
+    <select name="status">
+        <option value="open">Aberto</option>
+        <option value="in_progress">Em Progresso</option>
+        <option value="resolved">Resolvido</option>
+    </select>
+    <button type="submit">Atualizar</button>
+</form>
+
+<a href="/tickets">Voltar</a>

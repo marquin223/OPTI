@@ -1,0 +1,23 @@
+<h2>Tickets</h2>
+<a href="/tickets/create">Criar Novo Ticket</a>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Título</th>
+        <th>Status</th>
+        <th>Prioridade</th>
+        <th>Ações</th>
+    </tr>
+    <?php foreach ($tickets as $ticket) : ?>
+        <tr>
+            <td><?= $ticket->id ?></td>
+            <td><?= $ticket->title ?></td>
+            <td><?= $ticket->status()->name ?></td>
+            <td><?= $ticket->priority()->name ?></td>
+            <td>
+                <a href="/tickets/<?= $ticket->id ?>">Ver</a>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</table>

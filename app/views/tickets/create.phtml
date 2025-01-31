@@ -1,0 +1,20 @@
+<h2>Criar Novo Ticket</h2>
+<form method="POST" action="/tickets/store">
+    <label>Título:</label>
+    <input type="text" name="title" required>
+
+    <label>Prioridade:</label>
+    <select name="priority_id">
+        <option value="1">Baixa</option>
+        <option value="2">Média</option>
+        <option value="3">Alta</option>
+        <option value="4">Crítica</option>
+    </select>
+
+    <label>Descrição:</label>
+    <textarea name="description"></textarea>
+
+    <input type="hidden" name="user_id" value="1"> <!-- Supondo usuário logado -->
+
+    <button type="submit">Criar</button>
+</form>
