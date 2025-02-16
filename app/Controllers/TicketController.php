@@ -2,62 +2,153 @@
 
 namespace App\Controllers;
 
-use Core\Http\Request;
-use Core\Http\Response;
 use App\Models\Ticket;
+use App\Models\Priority;
 use App\Models\Status;
-use App\Models\User;
-use App\Models\Admin;
+use Core\Http\Controllers\Controller;
+use Core\Http\Request;
+use Lib\FlashMessage;
 
-class TicketController
+class TicketController extends Controller
 {
-    public function index()
+    public function index(): void
+    {
+        if (!isset($_SESSION['user_id'])) {
+            FlashMessage::danger('Erro: Usuário não autenticado.');
+            $this->redirectTo('/');
+            return;
+        }
+
+        $user_id = $_SESSION['user_id'];
+        $tickets = Ticket::where(['user_id' => $user_id]);
+
+        $this->render('tickets/index', compact('tickets', 'user_id'));
+    }
+
+    public function adminIndex(): void
     {
         $tickets = Ticket::all();
-        return Response::view('tickets/index', compact('tickets'));
+        $this->render('admin/tickets/index', ['tickets' => $tickets]);
     }
 
-    public function create()
+    public function showCreate(Request $request): void
     {
-        return Response::view('tickets/create');
+        $this->render('tickets/create');
     }
 
-    public function store(Request $request)
+    public function create(Request $request): void
     {
-        $ticket = new Ticket();
-        $ticket->user_id = $request->input('user_id');
-        $ticket->status_id = Status::OPEN;
-        $ticket->priority_id = $request->input('priority_id');
-        $ticket->title = $request->input('title');
-        $ticket->description = $request->input('description');
-        $ticket->created_date = date('Y-m-d');
+        $title = $request->input('title');
+        $description = $request->input('description');
+        $admin_id = $request->input('admin_id');
+        $user_id = $_SESSION['user_id'];
+        $priority_id = (int) $request->input('priority_id');
+        $status_id = 1;
 
-        if ($ticket->save()) {
-            return Response::redirect('/tickets');
+        if (!isset($_SESSION['user_id'])) {
+            FlashMessage::danger('Erro: Usuário não autenticado.');
+            $this->redirectTo('/tickets/create');
+            return;
         }
 
-        return Response::view('tickets/create', ['errors' => $ticket->errors()]);
-    }
-
-    public function show($id)
-    {
-        $ticket = Ticket::find($id);
-        return Response::view('tickets/show', compact('ticket'));
-    }
-
-    public function updateStatus(Request $request, $id)
-    {
-        $ticket = Ticket::find($id);
-        $status = $request->input('status');
-
-        if ($status === 'in_progress') {
-            $ticket->markInProgress();
-        } elseif ($status === 'resolved') {
-            $ticket->markResolved();
-        } elseif ($status === 'open') {
-            $ticket->reopen();
+        if (!$title || !$description) {
+            FlashMessage::danger('Por favor, preencha todos os campos obrigatórios.');
+            $this->redirectTo('/tickets/create');
+            return;
         }
 
-        return Response::redirect('/tickets/' . $id);
+        if (empty($priority_id)) {
+            FlashMessage::danger('A prioridade é obrigatória.');
+            $this->redirectTo('/tickets/create');
+            return;
+        }
+
+        $ticket = new Ticket([
+            'title' => $title,
+            'description' => $description,
+            'admin_id' => $admin_id ?? null,
+            'user_id' => $user_id ?? null,
+            'priority_id' => $priority_id,
+            'status_id' => (int) $status_id,
+            'created_date' => date('Y-m-d H:i:s'),
+        ]);
+
+
+        if (!$ticket->save()) {
+            FlashMessage::danger('Erro ao salvar ticket.');
+            $this->redirectTo('/tickets/create');
+            return;
+        }
+
+        FlashMessage::success('Ticket criado com sucesso.');
+        $this->redirectTo('/tickets');
+    }
+
+    public function show(Request $request): void
+    {
+        $id = $request->getParam('id');
+
+        if (!$id || !is_numeric($id)) {
+            die('ID inválido.');
+        }
+
+        $id = (int) $id;
+
+        $ticket = Ticket::findById($id);
+
+        if (!$ticket) {
+            die('Ticket não encontrado.');
+        }
+
+        require_once __DIR__ . '/../views/tickets/show.phtml';
+    }
+
+
+    public function openTicket(Request $request): void
+    {
+        $ticketId = $request->getParam('id');
+        $adminId = $_SESSION['admin_id'] ?? null;
+
+        if (!$adminId) {
+            FlashMessage::danger('Erro: Usuário não autenticado.');
+            $this->redirectTo('/admin/tickets');
+            return;
+        }
+
+        $ticket = Ticket::findById($ticketId);
+        if (!$ticket) {
+            FlashMessage::danger('Ticket não encontrado.');
+            $this->redirectTo('/admin/tickets');
+            return;
+        }
+
+        $ticket->update([
+          'status_id' => 2,
+          'admin_id' => $adminId,
+        ]);
+
+        FlashMessage::success('Chamado aberto com sucesso.');
+        $this->redirectTo('/admin/tickets');
+    }
+
+
+    public function closeTicket(Request $request): void
+    {
+        $ticketId = $request->getParam('id');
+
+        $ticket = Ticket::findById($ticketId);
+        if (!$ticket) {
+            FlashMessage::danger('Ticket não encontrado.');
+            $this->redirectTo('/admin/tickets');
+            return;
+        }
+
+        $ticket->update([
+        'status_id' => 3,
+        'closing_date' => date('Y-m-d H:i:s'),
+        ]);
+
+        FlashMessage::success('Chamado finalizado com sucesso.');
+        $this->redirectTo('/admin/tickets');
     }
 }

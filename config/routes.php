@@ -6,16 +6,23 @@ use App\Controllers\AdminController;
 use App\Controllers\TicketController;
 use Core\Router\Route;
 
+Route::get('/admin/tickets', [TicketController::class, 'adminIndex']);
 
-Router::get('/tickets', [TicketController::class, 'index']);
+Route::post('/admin/tickets/open/{id}', [TicketController::class, 'openTicket']);
 
-Router::get('/tickets/create', [TicketController::class, 'create']);
+Route::post('/admin/tickets/close/{id}', [TicketController::class, 'closeTicket']);
 
-Router::post('/tickets/store', [TicketController::class, 'store']);
+Route::get('/tickets', [TicketController::class, 'index']);
 
-Router::get('/tickets/{id}', [TicketController::class, 'show']);
+Route::get('/tickets/create', [TicketController::class, 'showCreate']);
 
-Router::post('/tickets/{id}/update-status', [TicketController::class, 'updateStatus']);
+Route::post('/tickets/{id}/feedback', [TicketController::class, 'storeFeedback']);
+
+Route::post('/tickets/create', [TicketController::class, 'create']);
+
+Route::get('/tickets/{id}', [TicketController::class, 'show']);
+
+Route::post('/tickets/{id}/update-status', [TicketController::class, 'updateStatus']);
 
 Route::get('/', [AuthenticatorController::class, 'showLogin'])->name('login');
 

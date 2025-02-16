@@ -3,77 +3,81 @@
 namespace App\Models;
 
 use Core\Database\ActiveRecord\Model;
+use Core\Database\ActiveRecord\BelongsTo;
 
 class Ticket extends Model
 {
     protected static string $table = 'tickets';
     protected static array $columns = [
-        'id', 'user_id', 'admin_id', 'status_id', 'priority_id', 'title', 'description', 'created_date', 'closing_date'
+     'id',
+     'title',
+     'description',
+     'admin_id',
+     'user_id',
+     'status_id',
+     'priority_id',
+     'created_date',
+     'closing_date'
     ];
 
     public ?int $id = null;
-    public int $user_id;
-    public ?int $admin_id = null;
-    public int $status_id;
-    public int $priority_id;
     public string $title;
-    public ?string $description = null;
-    public string $created_date;
+    public string $description;
+    public ?int $admin_id = null;
+    public ?int $user_id = null;
+    public ?int $status_id = null;
+    public ?int $priority_id;
+    public ?string $created_date = null;
     public ?string $closing_date = null;
 
-    public function user()
-    {
-        return User::find($this->user_id);
-    }
-
-    public function admin()
-    {
-        return $this->admin_id ? Admin::find($this->admin_id) : null;
-    }
-
-    public function status()
-    {
-        return Status::find($this->status_id);
-    }
-
-    public function priority()
-    {
-        return Priority::find($this->priority_id);
-    }
-
+    /**
+     * @return void
+     */
     public function validates(): void
     {
         if (empty($this->title)) {
-            $this->addError('title', 'O título do ticket é obrigatório.');
+            $this->addError('title', 'O campo título é obrigatório.');
         }
-        if (empty($this->user_id)) {
-            $this->addError('user_id', 'Usuário é obrigatório.');
+
+        if (empty($this->description)) {
+            $this->addError('description', 'O campo descrição é obrigatório.');
         }
-        if (empty($this->status_id)) {
-            $this->addError('status_id', 'Status é obrigatório.');
-        }
-        if (empty($this->priority_id)) {
-            $this->addError('priority_id', 'Prioridade é obrigatória.');
+
+        if (empty($this->admin_id) && empty($this->user_id)) {
+            $this->addError('admin_id', 'O ticket deve estar vinculado a um admin ou a um usuário.');
         }
     }
 
-    public function markInProgress()
+    public function admin(): ?Admin
     {
-        $this->status_id = Status::IN_PROGRESS;
-        $this->save();
+        return Admin::findById($this->admin_id);
     }
 
-    public function markResolved()
+    public function user(): ?User
     {
-        $this->status_id = Status::RESOLVED;
-        $this->closing_date = date('Y-m-d');
-        $this->save();
+        return User::findById($this->user_id);
     }
 
-    public function reopen()
+    public function status(): ?Status
     {
-        $this->status_id = Status::OPEN;
-        $this->closing_date = null;
-        $this->save();
+        return Status::findById($this->status_id);
+    }
+
+    public function beforeSave(): void
+    {
+        if ($this->id === null) {
+            $this->created_date = date('Y-m-d H:i:s');
+        }
+
+        if ($this->priority_id === null) {
+            $this->priority_id = 1;
+        }
+
+        $this->closing_date = date('Y-m-d H:i:s');
+    }
+
+    public function priority(): BelongsTo
+    {
+        return new BelongsTo($this, Priority::class, 'priority_id');
     }
 }

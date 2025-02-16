@@ -33,14 +33,14 @@ class AuthenticatorController extends Controller
         }
 
         if ($login->admin_id) {
-            $_SESSION['user_id'] = $login->id;
+            $_SESSION['admin_id'] = $login->admin_id;
             FlashMessage::success('Login bem sucedido');
             $this->redirectTo('admin');
         }
 
         if ($login->user_id) {
             FlashMessage::success('Login bem sucedido');
-            $_SESSION['user_id'] = $login->id;
+            $_SESSION['user_id'] = $login-> user_id;
             $this->redirectTo('user');
         }
 

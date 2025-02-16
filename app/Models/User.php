@@ -26,8 +26,4 @@ class User extends Model
             $this->addError('phone', 'O campo telefone é inválido.');
         }
     }
-
-    public function getTickets() {
-      return Ticket::findByUserId($this->id); // Implementação da relação N x 1
-    }
 }

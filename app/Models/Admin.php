@@ -37,8 +37,4 @@ class Admin extends Model
             $this->addError('date_birth', 'O campo data de nascimento deve estar no formato YYYY-MM-DD.');
         }
     }
-
-    public function getTickets() {
-      return Ticket::findByAdminId($this->id); // Implementação da relação N x 1
-    }
 }
