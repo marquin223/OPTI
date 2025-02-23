@@ -1,10 +1,15 @@
 <?php
 
 use App\Controllers\AuthenticatorController;
+use App\Controllers\ProfileController;
 use App\Controllers\RegistrationController;
 use App\Controllers\AdminController;
 use App\Controllers\TicketController;
 use Core\Router\Route;
+
+Route::get('/profile', [ProfileController::class, 'index']);
+
+Route::post('/profile/upload', [ProfileController::class, 'upload']);
 
 Route::get('/admin/tickets', [TicketController::class, 'adminIndex']);
 
