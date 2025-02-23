@@ -27,14 +27,12 @@
             <input type="text" class="form-control" id="phone" name="phone">
         </div>
 
-        <!-- Campo CEP -->
         <div class="mb-3">
             <label for="cep" class="form-label">CEP</label>
             <input type="text" class="form-control" id="cep" name="cep" maxlength="9" required>
             <button type="button" class="btn btn-secondary mt-2" id="buscarCep">Buscar CEP</button>
         </div>
 
-        <!-- Campos de Endereço -->
         <div class="mb-3">
             <label for="rua" class="form-label">Rua</label>
             <input type="text" class="form-control" id="rua" name="rua" readonly>
@@ -62,8 +60,7 @@
 <script>
 $(document).ready(function() {
     $('#buscarCep').click(function() {
-        let cep = $('#cep').val().replace(/\D/g, ''); // Remove caracteres não numéricos
-
+        let cep = $('#cep').val().replace(/\D/g, '');
         if (cep.length !== 8) {
             alert('CEP inválido! Digite 8 números.');
             return;
