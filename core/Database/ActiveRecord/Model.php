@@ -359,9 +359,14 @@ abstract class Model
      */
     public static function exists($conditions): bool
     {
+        if (!is_array($conditions)) {
+            $conditions = ['id' => $conditions];
+        }
+
         $resp = self::where($conditions);
         return !empty($resp);
     }
+
 
     /* ------------------- RELATIONSHIPS METHODS ------------------- */
 

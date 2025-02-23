@@ -53,11 +53,22 @@ CREATE TABLE statuses (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name ENUM('open', 'in_progress', 'resolved') NOT NULL
 );
+INSERT INTO statuses (name) VALUES
+('open'),
+('in_progress'),
+('resolved');
+
 
 CREATE TABLE priorities (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name ENUM('low', 'medium', 'high', 'critical') NOT NULL
 );
+
+INSERT INTO priorities (name) VALUES
+('low'),
+('medium'),
+('high'),
+('critical');
 
 CREATE TABLE tickets (
     id INT PRIMARY KEY AUTO_INCREMENT,
