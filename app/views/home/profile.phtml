@@ -1,0 +1,37 @@
+<?php
+use App\Models\User;
+
+if (!isset($_SESSION['user_id'])) {
+    header('Location: /');
+    exit;
+}
+
+$user = User::findById($_SESSION['user_id']);
+$profileImage = "/assets/uploads/profile_{$user->id}.png";
+
+// Se a imagem não existir, usa a padrão
+if (!file_exists(__DIR__ . "/../../public$profileImage")) {
+    $profileImage = "/assets/images/defaults/avatar.png";
+}
+?>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Perfil</title>
+    <link href="/assets/css/application.css" rel="stylesheet">
+</head>
+<body>
+
+<h1>Meu Perfil</h1>
+
+<p>Nome: <?= htmlspecialchars($user->name) ?></p>
+<p>Telefone: <?= htmlspecialchars($user->phone) ?></p>
+
+<img id="preview" src="<?= htmlspecialchars($profileImage) ?>" alt="Imagem de perfil" width="150">
+<input type="file" id="imagePreviewInput" accept="image/*">
+<button id="imagePreviewSubmit" style="display: none;">Enviar</button> <!-- Botão escondido -->
+</body>
+
+<script src="/assets/js/application.js"></script>
