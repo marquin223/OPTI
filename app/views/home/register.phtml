@@ -1,10 +1,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>registro</title>
+    <title>Registro</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+<body>
 <div class="container mt-5">
     <h2>Registro de Usuário</h2>
     <form method="POST" action="/register">
@@ -24,9 +26,65 @@
             <label for="phone" class="form-label">Telefone</label>
             <input type="text" class="form-control" id="phone" name="phone">
         </div>
+
+        <div class="mb-3">
+            <label for="cep" class="form-label">CEP</label>
+            <input type="text" class="form-control" id="cep" name="cep" maxlength="9" required>
+            <button type="button" class="btn btn-secondary mt-2" id="buscarCep">Buscar CEP</button>
+        </div>
+
+        <div class="mb-3">
+            <label for="rua" class="form-label">Rua</label>
+            <input type="text" class="form-control" id="rua" name="rua" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="bairro" class="form-label">Bairro</label>
+            <input type="text" class="form-control" id="bairro" name="bairro" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="cidade" class="form-label">Cidade</label>
+            <input type="text" class="form-control" id="cidade" name="cidade" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="estado" class="form-label">Estado</label>
+            <input type="text" class="form-control" id="estado" name="estado" readonly>
+        </div>
+
         <button type="submit" class="btn btn-primary">Registrar</button>
     </form>
     <div class="mt-3">
-    <p>Ja tem uma conta? <a href="/">faça login aqui</a></p>
+        <p>Já tem uma conta? <a href="/">Faça login aqui</a></p>
     </div>
 </div>
+
+<script>
+$(document).ready(function() {
+    $('#buscarCep').click(function() {
+        let cep = $('#cep').val().replace(/\D/g, '');
+        if (cep.length !== 8) {
+            alert('CEP inválido! Digite 8 números.');
+            return;
+        }
+
+        $.ajax({
+            url: `https://viacep.com.br/ws/${cep}/json/`,
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                if (data.erro) {
+                    alert('CEP não encontrado!');
+                } else {
+                    $('#rua').val(data.logradouro);
+                    $('#bairro').val(data.bairro);
+                    $('#cidade').val(data.localidade);
+                    $('#estado').val(data.uf);
+                }
+            },
+            error: function() {
+                alert('Erro ao buscar CEP!');
+            }
+        });
+    });
+});
+</script>
+</body>
