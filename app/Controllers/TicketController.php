@@ -89,7 +89,7 @@ class TicketController extends Controller
         $id = $request->getParam('id');
 
         if (!$id || !is_numeric($id)) {
-            die('ID inválido.');
+            Flashmessage::danger('ID inválido.');
         }
 
         $id = (int) $id;
@@ -97,7 +97,7 @@ class TicketController extends Controller
         $ticket = Ticket::findById($id);
 
         if (!$ticket) {
-            die('Ticket não encontrado.');
+            Flashmessage::danger('Ticket não encontrado.');
         }
 
         require_once __DIR__ . '/../views/tickets/show.phtml';
